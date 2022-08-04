@@ -1,69 +1,44 @@
 import throttle from 'lodash.throttle';
 const refs = {
     form: document.querySelector(".feedback-form"),
-    email: document.querySelector(".feedback-form input"),
-    textarea: document.querySelector(".feedback-form textarea"),
+    
 }
 const LOCAL_KEY = 'feedback-form-state';
 
-const formData = {};    
+initForm();
 
-
-
-fillingInInputarea();
+refs.form.addEventListener('submit', e =>{
+    e.preventDefault();
+    const formData = new FormData(refs.form);
+    formData.forEach((value, name) => console.log(value, name)); 
+    localStorage.removeItem(LOCAL_KEY);
+    //console.log(e.currentTarget);
+    e.currentTarget.reset();
+    
+});
 
 function onFormInput(e) {
-    //const formElements = e.currentTarget.elements;
-    //console.log(formElements);
-    //const mail = formElements.email.value;
-    //const message = formElements.message.value;
-    formData[e.target.name] = e.target.value;
-    localStorage.setItem(LOCAL_KEY, JSON.stringify(formData));
+    let currentInputs = localStorage.getItem(LOCAL_KEY);
+    currentInputs = currentInputs ? JSON.parse(currentInputs) : {};
+    currentInputs[e.target.name] = e.target.value;
+    localStorage.setItem(LOCAL_KEY, JSON.stringify(currentInputs));
 }
 
-
-
-function onFormSubmit(e) {
-    e.preventDefault();
-    console.log(JSON.parse(localStorage.getItem(LOCAL_KEY)));
-    e.currentTarget.reset();
-    localStorage.removeItem(LOCAL_KEY);
-}
-
-function fillingInInputarea() {
-    const savedMessage = JSON.parse(localStorage.getItem(LOCAL_KEY));
-    if (savedMessage) {
-        refs.email.value = savedMessage.email;
-        refs.textarea.value = savedMessage.message;
+function initForm() {
+    let localInputs = localStorage.getItem(LOCAL_KEY);
+    if (localInputs) {
+        localInputs = JSON.parse(localInputs);
+        Object.entries(localInputs).forEach(([name, value]) => {
+            refs.form.elements[name].value = value;
+        });
+        
     }
-    else {
-        refs.email.value = '';
-        refs.textarea.value = '';
-    }
+    
 }
+
+
 
 refs.form.addEventListener('input', throttle(onFormInput, 500));
-refs.form.addEventListener('submit', onFormSubmit);
 
 
-//refs.textarea.addEventListener('input', throttle(onTextareaInput, 500));
-
-
-// const currentForm = event.currentTarget;
-//     const formElements = event.currentTarget.elements;
-//     //console.log(formElements);
-//     const mail = formElements.email.value;
-//     const password = formElements.password.value;
-
-//     if (mail === "" || password === "") {
-//         alert('Warning: fill in all fields!');
-//     }
-//     else {
-//         const formData = {
-//             mail,
-//             password,
-//         };
-//         console.log(formData);
-//         currentForm.reset();
-//     }
 

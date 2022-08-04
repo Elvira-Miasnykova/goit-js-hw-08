@@ -24,25 +24,14 @@ function createGalleryItemsMarkup(images) {
 }
 //console.log(createGalleryItemsMarkup);
 
+const gallerySimpleBox = new SimpleLightbox('.gallery a', {
+    captionDelay: 250,
+    captionPosition: 'bottom',
+    captionsData: 'alt',
+});
 
-function onClickLightBoxGallery(e) {
-    //console.log(e.currentTarget);
-    //console.log(e.target);
-    e.preventDefault();
-    if (!e.target) {
-        return;
-    }
-    
-        //const imageOriginal = e.target.dataset.source;
-    const gallerySimpleBox = new SimpleLightbox('.gallery a', {
-        captionDelay: 250,
-        captionPosition: 'bottom',
-        captionsData: 'alt',
-    });
-    }
-//}
 
-simpleLightBoxGallery.addEventListener('click', onClickLightBoxGallery);
+
 
 
 
